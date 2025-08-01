@@ -1,29 +1,36 @@
 from flask import Flask, request, jsonify
-import spacy
+from flask_cors import CORS
+import fitz  # PyMuPDF
 
 app = Flask(__name__)
-nlp = spacy.load("en_core_web_sm")
+CORS(app)
 
-# Define a simple keyword list for skills (customize as needed)
-SKILL_KEYWORDS = [
-    "React", "Node", "Express", "MongoDB", "PostgreSQL", "Docker", "AWS",
-    "JavaScript", "Python", "Java", "TypeScript", "HTML", "CSS", "C++", "Git"
-]
+KNOWN_SKILLS = {
+    "Python", "JavaScript", "Java", "C++", "React", "Node.js",
+    "HTML", "CSS", "SQL", "MongoDB", "Express", "Flask", "Django",
+    "Tailwind", "TypeScript", "AWS", "Git", "REST", "Docker"
+}
 
-@app.route("/extract-skills", methods=["POST"])
+@app.route("/extract_skills", methods=["POST"])
 def extract_skills():
-    data = request.get_json()
-    text = data.get("text", "")
+    if "resume" not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
 
-    doc = nlp(text)
-    found_skills = []
+    file = request.files["resume"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
 
-    for token in doc:
-        for skill in SKILL_KEYWORDS:
-            if skill.lower() in token.text.lower() and skill not in found_skills:
-                found_skills.append(skill)
+    try:
+        doc = fitz.open(stream=file.read(), filetype="pdf")
+        text = ""
+        for page in doc:
+            text += page.get_text()
 
-    return jsonify({"skills": found_skills})
+        found_skills = [skill for skill in KNOWN_SKILLS if skill.lower() in text.lower()]
+        return jsonify({"skills": found_skills}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(port=5001, debug=True)
+    app.run(port=5001)
