@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { fetchJobs } from "../services/api";
+import { fetchJobs, applyToJob } from "../services/api";
+import toast from "react-hot-toast";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
@@ -17,6 +18,15 @@ export default function Jobs() {
     };
     loadJobs();
   }, []);
+
+  const handleApply = async (jobId) => {
+    try {
+      await applyToJob(jobId);
+      toast.success("Applied successfully");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to apply");
+    }
+  };
 
   const totalPages = Math.ceil(jobs.length / jobsPerPage);
   const startIndex = (currentPage - 1) * jobsPerPage;
@@ -42,15 +52,24 @@ export default function Jobs() {
               Budget: ₹{job.budget} | Location:{" "}
               {job.location || "Not specified"}
             </p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {job.skills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md"
-                >
-                  {skill}
-                </span>
-              ))}
+
+            <div className="mt-4 flex flex-wrap justify-between items-center">
+              <div className="flex flex-wrap gap-2">
+                {job.skills.map((skill, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={() => handleApply(job._id)}
+                className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-full ml-2 mt-2"
+              >
+                Apply
+              </button>
             </div>
           </div>
         ))}

@@ -1,5 +1,5 @@
 import Application from "../models/applicationModel.js";
-import Job from "../models/jobModel.js";
+import Job from "../models/Job.js";
 
 export const applyToJob = async (req, res) => {
   const { jobId } = req.body;
