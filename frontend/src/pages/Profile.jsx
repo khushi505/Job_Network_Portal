@@ -1,158 +1,96 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext.jsx";
-import API from "../api/axios";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { fetchMyJobs } from "../services/api";
 
 export default function Profile() {
-  const { user, login } = useAuth();
-  const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({
-    bio: "",
-    linkedin: "",
-    walletAddress: "",
-    skills: "",
-  });
-  const [jobsPosted, setJobsPosted] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const [myJobs, setMyJobs] = useState([]);
 
   useEffect(() => {
-    if (user) {
-      setFormData({
-        bio: user.bio || "",
-        linkedin: user.linkedin || "",
-        walletAddress: user.walletAddress || "",
-        skills: user.skills?.join(", ") || "",
-      });
-    }
-  }, [user]);
-
-  useEffect(() => {
-    async function fetchMyJobs() {
+    const loadMyJobs = async () => {
       try {
-        const res = await API.get("/jobs");
-        const myJobs = res.data.filter((job) => job.user._id === user._id);
-        setJobsPosted(myJobs);
+        const res = await fetchMyJobs();
+        setMyJobs(res.data);
       } catch (err) {
-        console.error("Error loading jobs", err);
-      } finally {
-        setLoading(false);
+        console.error("Failed to load user's jobs", err);
       }
-    }
+    };
 
-    if (user) fetchMyJobs();
+    if (user) loadMyJobs();
   }, [user]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleUpdate = async () => {
-    try {
-      const res = await API.put("/users/profile", {
-        ...formData,
-        skills: formData.skills.split(",").map((s) => s.trim()),
-      });
-      login(res.data);
-      setEditMode(false);
-    } catch (err) {
-      alert("Failed to update profile");
-    }
-  };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">👤 Your Profile</h1>
+    <div className="min-h-screen bg-black text-white p-6">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold flex items-center gap-2">
+            <span role="img" aria-label="profile">
+              👤
+            </span>
+            Your Profile
+          </h2>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Edit Profile
+          </button>
+        </div>
 
-      <div className="bg-white shadow p-4 rounded mb-6">
-        <p>
-          <span className="font-semibold">Name:</span> {user.name}
-        </p>
-        <p>
-          <span className="font-semibold">Email:</span> {user.email}
-        </p>
+        <div className="bg-gray-800 p-6 rounded-lg mb-6 space-y-2">
+          <p>
+            <strong>Name:</strong> {user?.name}
+          </p>
+          <p>
+            <strong>Email:</strong> {user?.email}
+          </p>
+          <p>
+            <strong>LinkedIn:</strong> {user?.linkedin || "Not set"}
+          </p>
+          <p>
+            <strong>Wallet:</strong> {user?.walletAddress || "Not set"}
+          </p>
+          <p>
+            <strong>Skills:</strong>{" "}
+            {user?.skills?.length > 0 ? user.skills.join(", ") : "None"}
+          </p>
+        </div>
 
-        {editMode ? (
-          <div className="space-y-2 mt-4">
-            <input
-              name="linkedin"
-              placeholder="LinkedIn"
-              value={formData.linkedin}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-            <input
-              name="walletAddress"
-              placeholder="Wallet Address"
-              value={formData.walletAddress}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-            <input
-              name="skills"
-              placeholder="Skills (comma separated)"
-              value={formData.skills}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-            <textarea
-              name="bio"
-              placeholder="Bio"
-              value={formData.bio}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-            <button
-              onClick={handleUpdate}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            >
-              Save
-            </button>
-          </div>
+        <h3 className="text-xl font-bold mt-6 mb-2 text-red-300">
+          📌 Jobs You Posted
+        </h3>
+        {myJobs.length === 0 ? (
+          <p className="text-gray-400">No jobs posted yet.</p>
         ) : (
-          <div className="mt-4 space-y-1">
-            <p>
-              <span className="font-semibold">LinkedIn:</span>{" "}
-              {user.linkedin || "Not set"}
-            </p>
-            <p>
-              <span className="font-semibold">Wallet:</span>{" "}
-              {user.walletAddress || "Not set"}
-            </p>
-            <p>
-              <span className="font-semibold">Skills:</span>{" "}
-              {user.skills?.join(", ") || "None"}
-            </p>
-            <p>
-              <span className="font-semibold">Bio:</span> {user.bio || ""}
-            </p>
-            <button
-              onClick={() => setEditMode(true)}
-              className="mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-            >
-              Edit Profile
-            </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {myJobs.map((job) => (
+              <div
+                key={job._id}
+                className="bg-gray-800 rounded-xl shadow-md p-4 border border-gray-600"
+              >
+                <h4 className="text-lg font-semibold">{job.title}</h4>
+                <p className="mt-2">{job.description}</p>
+                <p className="mt-1 text-sm text-gray-400">
+                  Budget: ₹{job.budget} | Location:{" "}
+                  {job.location || "Not specified"}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {job.skills.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
-      </div>
 
-      <h2 className="text-2xl font-bold mb-2">📌 Jobs You Posted</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : jobsPosted.length === 0 ? (
-        <p>No jobs posted yet.</p>
-      ) : (
-        <div className="space-y-4">
-          {jobsPosted.map((job) => (
-            <div key={job._id} className="border p-4 rounded bg-gray-50">
-              <h3 className="text-lg font-semibold">{job.title}</h3>
-              <p>{job.description}</p>
-              <p className="text-sm text-gray-600">
-                Skills: {job.skills.join(", ")}
-              </p>
-              <p className="text-sm text-gray-600">Budget: ₹{job.budget}</p>
-            </div>
-          ))}
-        </div>
-      )}
+        <h3 className="text-xl font-bold mt-8 mb-2 text-pink-300">
+          📥 Jobs You Applied To
+        </h3>
+        <p className="text-gray-400 italic">Not implemented yet</p>
+      </div>
     </div>
   );
 }

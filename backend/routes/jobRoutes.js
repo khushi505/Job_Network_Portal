@@ -1,10 +1,15 @@
 import express from "express";
-import { createJob, getAllJobs } from "../controllers/jobController.js";
-import protect from "../middleware/authMiddleware.js";
+import {
+  createJob,
+  getAllJobs,
+  getJobsByCurrentUser,
+} from "../controllers/jobController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/", protect, createJob);
-router.get("/", getAllJobs); // optional: public access
+router.get("/", protect, getAllJobs);
+router.get("/user", protect, getJobsByCurrentUser); // ✅ new
 
 export default router;

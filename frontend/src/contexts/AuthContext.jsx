@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   const login = (data) => {
-    localStorage.setItem("user", JSON.stringify(data));
+    localStorage.setItem("user", JSON.stringify(data)); // ✅ must store updated values
     setUser(data);
   };
 

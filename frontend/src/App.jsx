@@ -1,4 +1,3 @@
-// ===== src/App.jsx =====
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,6 +11,7 @@ import PostJob from "./pages/PostJob";
 import Navbar from "./components/Navbar";
 import { useAuth } from "./contexts/AuthContext.jsx";
 import Profile from "./pages/Profile";
+import Jobs from "./pages/Jobs"; // ✅ NEW import
 
 function App() {
   const { user } = useAuth();
@@ -28,9 +28,22 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/post-job" element={<PostJob />} />
+        <Route
+          path="/dashboard"
+          element={user ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={user ? <Profile /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/post-job"
+          element={user ? <PostJob /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/jobs"
+          element={user ? <Jobs /> : <Navigate to="/login" />} // ✅ NEW route
+        />
       </Routes>
     </Router>
   );
