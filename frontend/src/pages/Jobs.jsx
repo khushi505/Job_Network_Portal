@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchJobs, applyToJob } from "../services/api";
 import toast from "react-hot-toast";
+import JobCard from "../components/JobCard";
+import { useSkills } from "../contexts/SkillContext";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 6;
+  const { extractedSkills } = useSkills();
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -35,47 +38,17 @@ export default function Jobs() {
   return (
     <div className="min-h-screen bg-black p-6 text-white">
       <h2 className="text-3xl font-bold mb-6 text-center">Explore Jobs</h2>
-
-      {/* Grid layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentJobs.map((job) => (
-          <div
+          <JobCard
             key={job._id}
-            className="bg-gray-800 rounded-xl shadow-md p-4 border border-gray-600"
-          >
-            <h3 className="text-xl font-semibold">{job.title}</h3>
-            <p className="text-sm text-gray-400">
-              By {job.createdBy?.name || "Unknown"}
-            </p>
-            <p className="mt-2">{job.description}</p>
-            <p className="mt-1 text-sm text-gray-400">
-              Budget: ₹{job.budget} | Location:{" "}
-              {job.location || "Not specified"}
-            </p>
-
-            <div className="mt-4 flex flex-wrap justify-between items-center">
-              <div className="flex flex-wrap gap-2">
-                {job.skills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={() => handleApply(job._id)}
-                className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-full ml-2 mt-2"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
+            job={job}
+            onApply={handleApply}
+            extractedSkills={extractedSkills}
+          />
         ))}
       </div>
 
-      {/* Pagination controls */}
       <div className="flex justify-center items-center mt-8 gap-2">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
@@ -84,7 +57,6 @@ export default function Jobs() {
         >
           Prev
         </button>
-
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
@@ -98,7 +70,6 @@ export default function Jobs() {
             {index + 1}
           </button>
         ))}
-
         <button
           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           disabled={currentPage === totalPages}

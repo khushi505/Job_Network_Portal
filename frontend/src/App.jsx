@@ -13,6 +13,7 @@ import { useAuth } from "./contexts/AuthContext.jsx";
 import Profile from "./pages/Profile";
 import Jobs from "./pages/Jobs"; // ✅ NEW import
 import ResumeSkills from "./pages/ResumeSkills";
+import { SkillProvider } from "./contexts/SkillContext";
 
 function App() {
   const { user } = useAuth();
