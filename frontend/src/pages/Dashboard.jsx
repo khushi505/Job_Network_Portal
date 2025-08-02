@@ -1,53 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { fetchJobs, applyToJob } from "../services/api";
-import { useSkills } from "../contexts/SkillContext";
-import JobCard from "../components/JobCard";
-import toast from "react-hot-toast";
+import React from "react";
+import PERSON from "../assets/PERSON.png";
+import WORK from "../assets/WORK.png";
 
 export default function Dashboard() {
-  const [jobs, setJobs] = useState([]);
-  const { extractedSkills } = useSkills();
-
-  useEffect(() => {
-    const loadJobs = async () => {
-      try {
-        const res = await fetchJobs();
-        setJobs(res.data);
-      } catch (err) {
-        console.error("Error fetching jobs", err);
-      }
-    };
-    loadJobs();
-  }, []);
-
-  const handleApply = async (jobId) => {
-    try {
-      await applyToJob(jobId);
-      toast.success("Applied successfully");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to apply");
-    }
-  };
-
   return (
-    <div className="p-6 bg-black min-h-screen text-white">
-      <h1 className="text-2xl font-bold mb-4">About Job & Network Portal</h1>
-      <p className="mb-6">
-        This is your hub to explore and post jobs, manage your profile, and
-        connect professionally.
-      </p>
-
-      <h2 className="text-xl font-semibold mb-4">Latest Jobs</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {jobs.slice(0, 6).map((job) => (
-          <JobCard
-            key={job._id}
-            job={job}
-            skills={extractedSkills}
-            onApply={() => handleApply(job._id)}
-          />
-        ))}
+    <div className="relative bg-black text-white overflow-hidden flex items-center justify-between px-12">
+      {/* Left Text Section */}
+      <div className="max-w-[50%]">
+        <h1 className="text-3xl font-bold mb-4">
+          Your Career, Powered by AI and Blockchain.
+        </h1>
+        <p className="text-lg">
+          Welcome to the Job & Network Portal — your all-in-one platform to
+          discover opportunities, showcase your skills, and build meaningful
+          professional connections. Our AI-powered matching, resume parsing, and
+          blockchain-secured payments ensure a smarter, faster, and more secure
+          hiring experience.
+        </p>
       </div>
+
+      {/* Right PERSON image (slightly pulled in from right) */}
+      <div className="relative z-10 mt-30 mr-[70px]">
+        {" "}
+        {/* pull image to left */}
+        <img
+          src={PERSON}
+          alt="Person working"
+          className="w-[420px] h-auto object-contain"
+        />
+      </div>
+
+      {/* Bottom Right WORK image */}
+      <img
+        src={WORK}
+        alt="Work Icon"
+        className="absolute bottom-[1em] right-1 w-45 h-auto"
+      />
     </div>
   );
 }

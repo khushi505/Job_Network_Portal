@@ -26,7 +26,7 @@ export default function Profile() {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className=" bg-black text-white p-6">
       <div className="max-w-2xl mx-auto">
         {/* Profile header */}
         <div className="flex justify-between items-center mb-6">

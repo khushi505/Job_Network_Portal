@@ -28,7 +28,7 @@ export default function PostJob() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white">
+    <div className=" bg-black flex items-center justify-center text-white">
       <div className="w-full max-w-md p-6">
         <h2 className="text-2xl font-bold mb-6 text-center">Post a Job</h2>
         <form onSubmit={handleSubmit}>

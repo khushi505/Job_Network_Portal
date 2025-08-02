@@ -36,7 +36,7 @@ export default function Jobs() {
   const currentJobs = jobs.slice(startIndex, startIndex + jobsPerPage);
 
   return (
-    <div className="min-h-screen bg-black p-6 text-white">
+    <div className=" bg-black p-6 text-white">
       <h2 className="text-3xl font-bold mb-6 text-center">Explore Jobs</h2>
 
       {/* Grid layout */}
