@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar";
 import { useAuth } from "./contexts/AuthContext.jsx";
 import Profile from "./pages/Profile";
 import Jobs from "./pages/Jobs"; // ✅ NEW import
+import ResumeSkills from "./pages/ResumeSkills";
 
 function App() {
   const { user } = useAuth();
@@ -40,6 +41,7 @@ function App() {
           path="/post-job"
           element={user ? <PostJob /> : <Navigate to="/login" />}
         />
+        <Route path="/resume-skills" element={<ResumeSkills />} />
         <Route
           path="/jobs"
           element={user ? <Jobs /> : <Navigate to="/login" />} // ✅ NEW route

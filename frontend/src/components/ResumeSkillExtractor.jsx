@@ -4,16 +4,20 @@ import axios from "axios";
 export default function ResumeSkillExtractor() {
   const [file, setFile] = useState(null);
   const [skills, setSkills] = useState([]);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const uploadedFile = e.target.files[0];
+    if (uploadedFile && uploadedFile.type === "application/pdf") {
+      setFile(uploadedFile);
+      setPreviewUrl(URL.createObjectURL(uploadedFile));
+    } else {
+      alert("Please select a valid PDF file.");
+    }
   };
 
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a file");
-      return;
-    }
+    if (!file) return alert("Please select a file");
 
     const formData = new FormData();
     formData.append("resume", file);
@@ -23,18 +27,10 @@ export default function ResumeSkillExtractor() {
         "http://localhost:5001/extract_skills",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      if (res.data.skills) {
-        setSkills(res.data.skills);
-        // ✅ Removed alert
-      } else {
-        alert("No skills found.");
-      }
+      setSkills(res.data.skills || []);
     } catch (err) {
       console.error("Upload failed:", err);
       alert("Skill extraction failed.");
@@ -42,43 +38,57 @@ export default function ResumeSkillExtractor() {
   };
 
   return (
-    <div className="bg-gray-900 text-white p-6 rounded-lg mt-8 space-y-4">
-      <h3 className="text-xl font-bold">AI Resume Skill Extractor</h3>
-
-      <div className="flex items-center gap-4">
-        <input
-          id="fileInput"
-          type="file"
-          accept=".pdf,.doc,.docx"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-
-        <label
-          htmlFor="fileInput"
-          className="bg-gray-700 px-4 py-2 rounded cursor-pointer hover:bg-gray-600"
-        >
-          {file ? file.name : "Choose File"}
-        </label>
-
-        <button
-          onClick={handleUpload}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Extract Skills
-        </button>
+    <div className="flex flex-col lg:flex-row gap-6 items-start">
+      {/* Left: PDF Preview */}
+      <div className="w-full lg:w-1/2 bg-gray-900 rounded-lg p-4">
+        {previewUrl ? (
+          <iframe
+            src={previewUrl}
+            title="Resume Preview"
+            width="100%"
+            height="600px"
+            className="rounded border border-gray-700"
+          />
+        ) : (
+          <p className="text-gray-400 italic">No resume selected.</p>
+        )}
       </div>
 
-      {skills.length > 0 && (
-        <div className="mt-4">
-          <p className="font-semibold text-green-300">Extracted Skills:</p>
-          <ul className="list-disc list-inside">
-            {skills.map((skill, i) => (
-              <li key={i}>{skill}</li>
-            ))}
-          </ul>
+      {/* Right: Extractor */}
+      <div className="w-full lg:w-1/2 bg-gray-900 rounded-lg p-6 space-y-4">
+        <div className="flex gap-4">
+          <input
+            id="fileInput"
+            type="file"
+            accept=".pdf"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <label
+            htmlFor="fileInput"
+            className="bg-gray-700 px-4 py-2 rounded cursor-pointer hover:bg-gray-600"
+          >
+            {file ? file.name : "Choose PDF"}
+          </label>
+          <button
+            onClick={handleUpload}
+            className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Extract Skills
+          </button>
         </div>
-      )}
+
+        {skills.length > 0 && (
+          <div>
+            <p className="font-semibold text-green-400">Extracted Skills:</p>
+            <ul className="list-disc list-inside space-y-1">
+              {skills.map((skill, i) => (
+                <li key={i}>{skill}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

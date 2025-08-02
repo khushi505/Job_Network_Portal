@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { fetchMyJobs, getAppliedJobs } from "../services/api";
-import ResumeSkillExtractor from "../components/ResumeSkillExtractor";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -58,8 +57,6 @@ export default function Profile() {
             {user?.skills?.length > 0 ? user.skills.join(", ") : "None"}
           </p>
         </div>
-
-        <ResumeSkillExtractor />
 
         {/* Jobs You Posted */}
         <h3 className="text-xl font-bold mt-6 mb-2 text-red-300">

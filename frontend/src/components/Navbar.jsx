@@ -21,6 +21,9 @@ export default function Navbar() {
             >
               Post Job
             </Link>
+            <Link to="/resume-skills" className="hover:text-blue-400">
+              Resume Skills
+            </Link>
             <Link
               to="/profile"
               className="text-white hover:text-blue-500 font-medium"
