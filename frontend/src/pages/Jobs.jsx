@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchJobs, applyToJob } from "../services/api";
-import toast from "react-hot-toast";
-import JobCard from "../components/JobCard";
 import { useSkills } from "../contexts/SkillContext";
+import JobCard from "../components/JobCard";
+import toast from "react-hot-toast";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const jobsPerPage = 6;
   const { extractedSkills } = useSkills();
+  const jobsPerPage = 6;
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -38,17 +38,20 @@ export default function Jobs() {
   return (
     <div className="min-h-screen bg-black p-6 text-white">
       <h2 className="text-3xl font-bold mb-6 text-center">Explore Jobs</h2>
+
+      {/* Grid layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentJobs.map((job) => (
           <JobCard
             key={job._id}
             job={job}
-            onApply={handleApply}
-            extractedSkills={extractedSkills}
+            skills={extractedSkills}
+            onApply={() => handleApply(job._id)}
           />
         ))}
       </div>
 
+      {/* Pagination controls */}
       <div className="flex justify-center items-center mt-8 gap-2">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
@@ -57,6 +60,7 @@ export default function Jobs() {
         >
           Prev
         </button>
+
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
@@ -70,6 +74,7 @@ export default function Jobs() {
             {index + 1}
           </button>
         ))}
+
         <button
           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           disabled={currentPage === totalPages}

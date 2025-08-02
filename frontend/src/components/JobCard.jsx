@@ -1,13 +1,23 @@
 import React from "react";
+import { useSkills } from "../contexts/SkillContext";
 
-export default function JobCard({ job, onApply, extractedSkills, hideScore }) {
-  const matchCount = job.skills.filter((skill) =>
-    extractedSkills?.some((s) => s.toLowerCase() === skill.toLowerCase())
-  ).length;
-  const matchScore =
-    job.skills.length > 0
-      ? Math.round((matchCount / job.skills.length) * 100)
-      : 0;
+// Calculate match score based on extracted skills
+const getMatchScore = (jobSkills, userSkills) => {
+  if (!userSkills?.length || !jobSkills?.length) return 0;
+
+  // Normalize casing
+  const normalizedUserSkills = userSkills.map((s) => s.toLowerCase());
+  const normalizedJobSkills = jobSkills.map((s) => s.toLowerCase());
+
+  const matched = normalizedJobSkills.filter((skill) =>
+    normalizedUserSkills.includes(skill)
+  );
+  return Math.round((matched.length / normalizedJobSkills.length) * 100);
+};
+
+export default function JobCard({ job, onApply }) {
+  const { extractedSkills } = useSkills();
+  const matchScore = getMatchScore(job.skills, extractedSkills);
 
   return (
     <div className="bg-gray-800 rounded-xl shadow-md p-4 border border-gray-600">
@@ -41,10 +51,8 @@ export default function JobCard({ job, onApply, extractedSkills, hideScore }) {
         )}
       </div>
 
-      {!hideScore && (
-        <p className="mt-2 text-sm text-red-400 font-semibold">
-          Match Score: {matchScore}%
-        </p>
+      {onApply && (
+        <p className="text-sm text-red-400 mt-3">Match Score: {matchScore}%</p>
       )}
     </div>
   );

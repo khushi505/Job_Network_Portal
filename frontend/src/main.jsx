@@ -11,7 +11,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <SkillProvider>
         {" "}
-        {/* ✅ wrap inside this */}
         <App />
       </SkillProvider>
       <Toaster />
