@@ -41,7 +41,7 @@ This full-stack application empowers users to explore jobs, post opportunities, 
 
 ---
 
-## 🔧 Tech Stack
+## Tech Stack
 
 | Layer    | Technology                                        |
 | -------- | ------------------------------------------------- |
@@ -103,7 +103,7 @@ npm run dev
 
 ---
 
-## 📦 Environment Variables
+## Environment Variables
 
 ### Backend (`backend/.env`)
 
