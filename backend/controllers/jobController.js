@@ -23,8 +23,15 @@ export const createJob = async (req, res) => {
 // Get all jobs
 export const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate("createdBy", "name");
-    res.json(jobs);
+    const { skill, location, keyword } = req.query;
+    const query = {};
+
+    if (skill) query.skills = { $regex: skill, $options: "i" };
+    if (location) query.location = { $regex: location, $options: "i" };
+    if (keyword) query.description = { $regex: keyword, $options: "i" };
+
+    const jobs = await Job.find(query).populate("createdBy", "name");
+    res.json(jobs); // make sure this is just jobs (an array)
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch jobs." });
   }

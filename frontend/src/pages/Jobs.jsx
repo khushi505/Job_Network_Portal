@@ -8,6 +8,9 @@ export default function Jobs() {
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 6;
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false); // Toggle state for search bar
+
   useEffect(() => {
     const loadJobs = async () => {
       try {
@@ -29,15 +32,49 @@ export default function Jobs() {
     }
   };
 
-  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  // Filter logic
+  const filteredJobs = jobs.filter((job) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      job.title?.toLowerCase().includes(query) ||
+      job.description?.toLowerCase().includes(query) ||
+      job.location?.toLowerCase().includes(query) ||
+      job.skills?.some((skill) => skill.toLowerCase().includes(query))
+    );
+  });
+
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const startIndex = (currentPage - 1) * jobsPerPage;
-  const currentJobs = jobs.slice(startIndex, startIndex + jobsPerPage);
+  const currentJobs = filteredJobs.slice(startIndex, startIndex + jobsPerPage);
 
   return (
-    <div className=" bg-black p-6 text-white">
+    <div className="bg-black p-6 text-white min-h-screen">
       <h2 className="text-3xl font-bold mb-6 text-center">Explore Jobs</h2>
 
-      {/* Grid layout */}
+      {/* Toggle Button */}
+      <div className="flex justify-center mb-4">
+        <button
+          onClick={() => setShowSearch((prev) => !prev)}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          {showSearch ? "Hide Search ✖" : "Search Jobs 🔍"}
+        </button>
+      </div>
+
+      {/* Collapsible Search Bar */}
+      {showSearch && (
+        <div className="flex justify-center mb-6 transition-all duration-300">
+          <input
+            type="text"
+            placeholder="Search title, skills, location, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="px-4 py-2 rounded bg-gray-700 text-white w-full max-w-2xl"
+          />
+        </div>
+      )}
+
+      {/* Job Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentJobs.map((job) => (
           <JobCard
@@ -48,8 +85,8 @@ export default function Jobs() {
         ))}
       </div>
 
-      {/* Pagination controls */}
-      <div className="flex justify-center items-center mt-8 gap-2">
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center mt-8 gap-2 flex-wrap">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}

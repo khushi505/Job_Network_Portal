@@ -11,9 +11,10 @@ import PostJob from "./pages/PostJob";
 import Navbar from "./components/Navbar";
 import { useAuth } from "./contexts/AuthContext.jsx";
 import Profile from "./pages/Profile";
-import Jobs from "./pages/Jobs"; // ✅ NEW import
+import Jobs from "./pages/Jobs";
 import ResumeSkills from "./pages/ResumeSkills";
 import SmartSuggestions from "./pages/SmartSuggestions";
+import Journal from "./pages/Journal";
 
 function App() {
   const { user } = useAuth();
@@ -32,6 +33,7 @@ function App() {
             />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+
             <Route
               path="/dashboard"
               element={user ? <Dashboard /> : <Navigate to="/login" />}
@@ -44,12 +46,15 @@ function App() {
               path="/post-job"
               element={user ? <PostJob /> : <Navigate to="/login" />}
             />
-            <Route path="/smart-suggestions" element={<SmartSuggestions />} />
-            <Route path="/resume-skills" element={<ResumeSkills />} />
             <Route
               path="/jobs"
-              element={user ? <Jobs /> : <Navigate to="/login" />} // ✅ NEW route
+              element={user ? <Jobs /> : <Navigate to="/login" />}
             />
+            <Route path="/resume-skills" element={<ResumeSkills />} />
+            <Route path="/smart-suggestions" element={<SmartSuggestions />} />
+
+            {/* ✅ Journal route – accessible to all */}
+            <Route path="/journal" element={<Journal />} />
           </Routes>
         </main>
       </div>

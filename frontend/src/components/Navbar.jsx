@@ -36,6 +36,13 @@ export default function Navbar() {
             >
               Smart Suggestions
             </Link>
+            {/* ✅ New Explore (Journal) link */}
+            <Link
+              to="/journal"
+              className="hover:text-blue-400 font-medium border border-blue-500 px-3 py-1 rounded"
+            >
+              Explore
+            </Link>
             <Link
               to="/profile"
               className="text-white hover:text-blue-500 border border-blue-500 px-3 py-1 rounded font-medium"

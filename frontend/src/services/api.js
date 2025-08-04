@@ -11,7 +11,7 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// Job APIs
+// ✅ Job APIs
 export const fetchJobs = () => API.get("/jobs");
 export const postJob = (jobData) => API.post("/jobs", jobData);
 export const fetchMyJobs = () => API.get("/jobs/user");
@@ -23,3 +23,10 @@ export const getSmartJobSuggestions = () => API.get("/suggestions/jobs");
 
 // ✅ Update user profile (e.g. with extracted skills)
 export const updateUserProfile = (data) => API.put("/users/profile", data);
+
+// ✅ Update post (e.g. for job post editing)
+export const updatePost = (postId, data) => API.put(`/posts/${postId}`, data);
+
+// ✅ Journal Post APIs
+export const createJournalPost = (data) => API.post("/journal", data);
+export const fetchJournalPosts = () => API.get("/journal");
