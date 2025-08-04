@@ -13,6 +13,7 @@ import { useAuth } from "./contexts/AuthContext.jsx";
 import Profile from "./pages/Profile";
 import Jobs from "./pages/Jobs"; // ✅ NEW import
 import ResumeSkills from "./pages/ResumeSkills";
+import SmartSuggestions from "./pages/SmartSuggestions";
 
 function App() {
   const { user } = useAuth();
@@ -43,6 +44,7 @@ function App() {
               path="/post-job"
               element={user ? <PostJob /> : <Navigate to="/login" />}
             />
+            <Route path="/smart-suggestions" element={<SmartSuggestions />} />
             <Route path="/resume-skills" element={<ResumeSkills />} />
             <Route
               path="/jobs"

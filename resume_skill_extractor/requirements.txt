@@ -1,2 +1,5 @@
 flask
 spacy
+sentence-transformers
+scikit-learn
+flask-cors

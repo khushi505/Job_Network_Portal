@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSkills } from "../contexts/SkillContext";
+import { updateUserProfile } from "../services/api";
 
 export default function ResumeSkillExtractor() {
   const [file, setFile] = useState(null);

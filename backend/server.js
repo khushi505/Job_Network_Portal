@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import smartSuggestionRoutes from "./routes/smartSuggestionRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/suggestions", smartSuggestionRoutes);
 
 app.get("/", (req, res) => res.send("API is running ✅"));
 

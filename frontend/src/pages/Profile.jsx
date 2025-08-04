@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { fetchMyJobs, getAppliedJobs } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
-import { useSkills } from "../contexts/SkillContext";
 import JobCard from "../components/JobCard";
 
 export default function Profile() {
   const { user } = useAuth();
-  const { extractedSkills } = useSkills();
   const [myJobs, setMyJobs] = useState([]);
   const [appliedJobs, setAppliedJobs] = useState([]);
 
@@ -70,7 +68,7 @@ export default function Profile() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {myJobs.map((job) => (
-              <JobCard key={job._id} job={job} showMatchScore={false} />
+              <JobCard key={job._id} job={job} />
             ))}
           </div>
         )}
@@ -84,7 +82,7 @@ export default function Profile() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {appliedJobs.map((job) => (
-              <JobCard key={job._id} job={job} skills={extractedSkills} />
+              <JobCard key={job._id} job={job} />
             ))}
           </div>
         )}

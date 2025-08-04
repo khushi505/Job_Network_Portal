@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { fetchJobs, applyToJob } from "../services/api";
-import { useSkills } from "../contexts/SkillContext";
 import JobCard from "../components/JobCard";
 import toast from "react-hot-toast";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const { extractedSkills } = useSkills();
   const jobsPerPage = 6;
 
   useEffect(() => {
@@ -45,7 +43,6 @@ export default function Jobs() {
           <JobCard
             key={job._id}
             job={job}
-            skills={extractedSkills}
             onApply={() => handleApply(job._id)}
           />
         ))}

@@ -12,21 +12,33 @@ export default function Navbar() {
       <div className="ml-auto flex gap-4 items-center">
         {user ? (
           <>
-            <a href="/jobs" className="text-white hover:text-blue-300">
+            <a
+              href="/jobs"
+              className="text-white hover:text-blue-300 font-medium border border-blue-500 px-3 py-1 rounded"
+            >
               Jobs
             </a>
             <Link
               to="/post-job"
-              className="text-white hover:text-blue-500 font-medium"
+              className="text-white hover:text-blue-500 font-medium border border-blue-500 px-3 py-1 rounded"
             >
               Post Job
             </Link>
-            <Link to="/resume-skills" className="hover:text-blue-400">
+            <Link
+              to="/resume-skills"
+              className="hover:text-blue-400 font-medium border border-blue-500 px-3 py-1 rounded"
+            >
               Resume Skills
             </Link>
             <Link
+              to="/smart-suggestions"
+              className="hover:text-blue-400 font-medium border border-blue-500 px-3 py-1 rounded"
+            >
+              Smart Suggestions
+            </Link>
+            <Link
               to="/profile"
-              className="text-white hover:text-blue-500 font-medium"
+              className="text-white hover:text-blue-500 border border-blue-500 px-3 py-1 rounded font-medium"
             >
               Profile
             </Link>

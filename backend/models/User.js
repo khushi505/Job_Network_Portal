@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  bio: String,
   walletAddress: {
     type: String,
     default: "",
