@@ -121,12 +121,6 @@ VITE_API_URL=http://localhost:5000/api
 
 ---
 
-## Go-To-Market (GTM) & Monetization Strategy
-
-Got it! Here's the **Go-To-Market (GTM) Strategy** section formatted in clean **Markdown**, specifically for your `README.md` file:
-
----
-
 ## Go-To-Market (GTM) Strategy
 
 To reach the first **10,000 users** with a total marketing budget of **₹5,000**, the following cost-effective, high-impact strategy will be executed:
